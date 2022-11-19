@@ -28,11 +28,12 @@ public class UserController {
         Integer id = generatedId(); //Генерация Id
         user.setId(id); //Установка Id
         users.put(id, user); //Запись данных о пользователе в таблицу(Создание новго пользователя)
+
         return user;
     }
 
     @PutMapping
-    public User updateUser(User user) //Обнавления данных о пользователе
+    public User updateUser(@Valid @RequestBody User user) //Обнавления данных о пользователе
     {
         log.info("UserController.updateUser: Обновляем пользователя"); //Запись в лог
         ValidationUser.noFoundUser(user,users); //Валидация данных

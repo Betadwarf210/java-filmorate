@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.validators.ValidationFilm;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +22,7 @@ public class FilmController {
 
 
     @PostMapping
-    public Film addFilm(Film film) //Добавление фильма
+    public Film addFilm(@Valid @RequestBody Film film) //Добавление фильма
     {
         log.info("FilmController.createFilm:Добавление фильма"); //Запись в лог
         ValidationFilm.validateFields(film); //Валидация данных о фильме
@@ -32,7 +33,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film updateFilm(Film film)
+    public Film updateFilm(@Valid @RequestBody Film film)
     {
         log.info("FilmController.createFilm: Обновление фильма"); //Запись в лог
         ValidationFilm.noFoundFilm(film,films); //Валидация данных о фильме

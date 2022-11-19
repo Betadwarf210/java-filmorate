@@ -19,45 +19,45 @@ public class UserTests {
 
 
     @Test
-    @DisplayName("1) Проверка валидации. Передаем верно-заполненный объект")
+    @DisplayName("Проверка валидации. Передаем верно-заполненный объект")
     void correctlyFilledUserTest() {
-        final User user = new User(1, "qw@mail.ru", "test", "name", LocalDate.of(2000, 12, 12));
+        final User user = new User(1, "mr@gmail.ru", "testLogin", "testName", LocalDate.of(2000, 12, 12));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
-        Assertions.assertTrue(violations.isEmpty(),"Заполнено все верно");
+        Assertions.assertTrue(violations.isEmpty(),"Все заполнено верно");
     }
     @Test
-    @DisplayName("2) Проверка валидации. Передаем неверно-заполненный Email")
+    @DisplayName("Проверка валидации. Передаем неверно-заполненный Email")
     void correctlyEmailUserTestFirst() {
-        final User user = new User(1, "badEmail", "test", "name", LocalDate.of(2000, 12, 12));
+        final User user = new User(1, "badTestEmail", "testLogin", "testName", LocalDate.of(2000, 12, 12));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
-        Assertions.assertFalse(violations.isEmpty(),"Неверно заполнен email");
+        Assertions.assertFalse(violations.isEmpty(),"Неверно заполненый email");
     }
     @Test
-    @DisplayName("3) Проверка валидации. Передаем пустой Email")
+    @DisplayName("Проверка валидации. Передаем пустой Email")
     void correctlyEmailUserTestSecond() {
-        final User user = new User(1, "", "test", "name", LocalDate.of(2000, 12, 12));
+        final User user = new User(1, "", "testLogin", "testName", LocalDate.of(2000, 12, 12));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
-        Assertions.assertFalse(violations.isEmpty(),"Пустой email");
+        Assertions.assertFalse(violations.isEmpty(),"Blank email");
     }
 
     @Test
-    @DisplayName("4) Проверка валидации. Передаем будущую дату")
+    @DisplayName("Проверка валидации. Передаем будущую дату")
     void correctlyBirthdayUserTest() {
-        final User user = new User(1, "qw@mail.ru", "test", "name", LocalDate.of(2025, 11, 14));
+        final User user = new User(1, "mr@gmail.ru", "testLogin", "testName", LocalDate.of(2025, 11, 14));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
-        Assertions.assertFalse(violations.isEmpty(),"Будущая дата");
+        Assertions.assertFalse(violations.isEmpty(),"Не верная дата(будующий сегмент)");
     }
     @Test
-    @DisplayName("5) Проверка валидации. Передаем пустой логин")
+    @DisplayName("Проверка валидации. Передаем пустой логин")
     void correctlyLoginUserTest() {
-        final User user = new User(1, "qw@mail.ru", "", "name", LocalDate.of(2000, 11, 14));
+        final User user = new User(1, "mr@gmail.ru", "", "testName", LocalDate.of(2000, 11, 14));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         Assertions.assertFalse(violations.isEmpty(),"Пустой логин");
     }
     @Test
-    @DisplayName("6) Проверка валидации. Проверка логина на пробелы")
+    @DisplayName("Проверка валидации. Проверка логина на пробелы")
     void correctlyLoginTest() {
-        final User user = new User(1, "qw@mail.ru", "q w", "name", LocalDate.of(2000, 11, 14));
+        final User user = new User(1, "mr@gmail.ru", "m r", "testName", LocalDate.of(2000, 11, 14));
         Assertions.assertTrue(ValidationUser.isValidLogin(user.getLogin()), "В логине есть пробелы");
     }
 }
