@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.validators;
 
+import lombok.experimental.UtilityClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.yandex.practicum.filmorate.controller.UserController;
@@ -10,6 +11,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+@UtilityClass
 public class ValidationUser {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     public static boolean isValidLogin(String str) {

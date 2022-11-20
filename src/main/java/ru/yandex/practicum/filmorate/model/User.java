@@ -12,20 +12,20 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 public class User {
-    Integer id; // Идентификатор
+    private Integer id; // Идентификатор
 
     @NotEmpty
     @Email(message = "Неправильно введен адрес электронной почты")
-    String email; //Электронная почта
+    private String email; //Электронная почта
 
     @NotEmpty
-    String login; //Логин пользователя
+    private String login; //Логин пользователя
 
 
-    String name; //Имя пользователя
+    private String name; //Имя пользователя
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @PastOrPresent
-    LocalDate birthday; //Дата рождения (Или сегодня, или в прошедшем времени)
+    private LocalDate birthday; //Дата рождения (Или сегодня, или в прошедшем времени)
 
 }

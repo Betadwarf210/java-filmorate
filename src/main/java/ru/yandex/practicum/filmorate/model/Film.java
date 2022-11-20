@@ -13,18 +13,18 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 public class Film {
-    Integer id; //Идентификатор фильма
+    private Integer id; //Идентификатор фильма
 
     @NotEmpty(message = "Имя не может быть пустым")
-    String name; //Название
+    private String name; //Название
 
     @Size(max = 200,message = "Максимальная длина 200 символов")
-    String description; //Описание фильма (Максимум 200 символов)
+    private String description; //Описание фильма (Максимум 200 символов)
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    LocalDate releaseDate; //Дата выхода фильма
+    private LocalDate releaseDate; //Дата выхода фильма
 
     @Positive
-    Integer duration; //Продолжительность фильма
+    private Integer duration; //Продолжительность фильма
 
 }

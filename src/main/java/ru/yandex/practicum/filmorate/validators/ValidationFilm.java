@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.validators;
 
+import lombok.experimental.UtilityClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.yandex.practicum.filmorate.controller.FilmController;
@@ -10,6 +11,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.time.LocalDate;
 import java.util.Map;
 
+@UtilityClass
 public class ValidationFilm {
     private static final Logger logger = LoggerFactory.getLogger(FilmController.class);//Лог действий
     public static boolean isValidDate(LocalDate dateStr) {
