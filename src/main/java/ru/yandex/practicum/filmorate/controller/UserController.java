@@ -1,57 +1,77 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.validators.ValidationUser;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UserController {
-    private final Logger log = LoggerFactory.getLogger(UserController.class);
-    private Integer userId = 0;
+    final UserService userService;
 
-    Map<Integer, User> users = new HashMap<>();
-
-    @PostMapping
-    public User createUser(@Valid @RequestBody User user)
-    {
-        log.info("UserController.createUser: Создание пользователя"); //Запись в лог
-        ValidationUser.validateFields(user); //Валидация данных пользователя
-        Integer id = generatedId(); //Генерация Id
-        user.setId(id); //Установка Id
-        users.put(id, user); //Запись данных о пользователе в таблицу(Создание новго пользователя)
-
-        return user;
-    }
-
-    @PutMapping
-    public User updateUser(@Valid @RequestBody User user) //Обнавления данных о пользователе
-    {
-        log.info("UserController.updateUser: Обновляем пользователя"); //Запись в лог
-        ValidationUser.noFoundUser(user,users); //Валидация данных
-        ValidationUser.validateFields(user); //Валидация данных
-        users.put(user.getId(), user); //Запись обновленных данных о пользователе в таблицу
-        return user;
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
-    public List<User> getAllUsers() //Получение списка всех пользователей
-    {
-        return new ArrayList<>(users.values()); //Список пользователей
+    public List<User> getUsers() {
+        log.info("UserController. findAll. Получаем всех пользователей.");
+        return new ArrayList<>(userService.getUsers().values());
     }
 
-    public Integer generatedId() //Генерация id
-    {
-        userId++;
-        return userId;
+    @PostMapping
+    public User createUser(@Valid @RequestBody User user) {
+        log.info("UserController. createUser. Создание пользователя.");
+        System.out.println(user);
+        return userService.addUser(user);
     }
 
+    @PutMapping
+    public User updateUser(@Valid @RequestBody User user) {
+        log.info("UserController. updateUser. Обновление пользователя.");
+        return userService.updateUser(user);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable int id) {
+        log.info("UserController. getUser. Получение пользователя.");
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<User> putUserFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        log.info("UserController. putUserFriend. Добавление в друзья.");
+        userService.addFriend(id, friendId);
+        return new ResponseEntity<>(userService.getUsers().get(id), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<User> deleteUserFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        log.info("UserController. deleteUserFriend. Удаление из друзей.");
+        userService.deleteFriend(id, friendId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{id}/friends")
+    public ResponseEntity<List<User>> getUserFriends(@PathVariable Integer id) {
+        log.info("UserController. getUserFriends. Получение друзей.");
+        return new ResponseEntity<>(userService.getUserFriends(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public ResponseEntity<List<User>> getCommonUsersFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
+        log.info("UserController. getCommonUsersFriends. Получение общих друзей.");
+        return new ResponseEntity<>(userService.getCommonFriend(id, otherId), HttpStatus.OK);
+    }
 }
+

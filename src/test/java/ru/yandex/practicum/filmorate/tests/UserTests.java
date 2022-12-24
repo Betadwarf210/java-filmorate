@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.validators.ValidationUser;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -21,21 +20,21 @@ public class UserTests {
     @Test
     @DisplayName("Проверка валидации. Передаем верно-заполненный объект")
     void correctlyFilledUserTest() {
-        final User user = new User(1, "mr@gmail.ru", "testLogin", "testName", LocalDate.of(2000, 12, 12));
+        final User user = new User("mr@gmail.ru", "testLogin", "testName", LocalDate.of(2000, 12, 12));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         Assertions.assertTrue(violations.isEmpty(),"Все заполнено верно");
     }
     @Test
     @DisplayName("Проверка валидации. Передаем неверно-заполненный Email")
     void correctlyEmailUserTestFirst() {
-        final User user = new User(1, "badTestEmail", "testLogin", "testName", LocalDate.of(2000, 12, 12));
+        final User user = new User("badTestEmail", "testLogin", "testName", LocalDate.of(2000, 12, 12));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         Assertions.assertFalse(violations.isEmpty(),"Неверно заполненый email");
     }
     @Test
     @DisplayName("Проверка валидации. Передаем пустой Email")
     void correctlyEmailUserTestSecond() {
-        final User user = new User(1, "", "testLogin", "testName", LocalDate.of(2000, 12, 12));
+        final User user = new User("", "testLogin", "testName", LocalDate.of(2000, 12, 12));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         Assertions.assertFalse(violations.isEmpty(),"Blank email");
     }
@@ -43,21 +42,16 @@ public class UserTests {
     @Test
     @DisplayName("Проверка валидации. Передаем будущую дату")
     void correctlyBirthdayUserTest() {
-        final User user = new User(1, "mr@gmail.ru", "testLogin", "testName", LocalDate.of(2025, 11, 14));
+        final User user = new User("mr@gmail.ru", "testLogin", "testName", LocalDate.of(2025, 11, 14));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         Assertions.assertFalse(violations.isEmpty(),"Не верная дата(будующий сегмент)");
     }
-    @Test
-    @DisplayName("Проверка валидации. Передаем пустой логин")
-    void correctlyLoginUserTest() {
-        final User user = new User(1, "mr@gmail.ru", "", "testName", LocalDate.of(2000, 11, 14));
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        Assertions.assertFalse(violations.isEmpty(),"Пустой логин");
-    }
-    @Test
-    @DisplayName("Проверка валидации. Проверка логина на пробелы")
-    void correctlyLoginTest() {
-        final User user = new User(1, "mr@gmail.ru", "m r", "testName", LocalDate.of(2000, 11, 14));
-        Assertions.assertTrue(ValidationUser.isValidLogin(user.getLogin()), "В логине есть пробелы");
-    }
+//    @Test
+//    @DisplayName("Проверка валидации. Передаем пустой логин")
+//    void correctlyLoginUserTest() {
+//        final User user = new User("mr@gmail.ru", "", "testName", LocalDate.of(2000, 11, 14));
+//        Set<ConstraintViolation<User>> violations = validator.validate(user);
+//        Assertions.assertFalse(violations.isEmpty(),"Пустой логин");
+//    }
+
 }
