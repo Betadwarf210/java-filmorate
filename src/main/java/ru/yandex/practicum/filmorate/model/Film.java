@@ -30,9 +30,9 @@ public class Film {
     @Positive
     private Integer duration; //Продолжительность фильма
 
-    Integer rating;//рейтинг(количество лайков)
+    private Integer rating;//рейтинг(количество лайков)
 
-    Set<Integer> usersLikedFilm = new HashSet<>();//Храним список пользователей,лайкнувших фильм
+    private Set<Integer> usersLikedFilm = new HashSet<>();//Храним список пользователей,лайкнувших фильм
 
     //Рабочий конструктор для тестов
     public Film(String name, String description, LocalDate releaseDate, Integer duration, Integer rating) {

@@ -1,9 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import ru.yandex.practicum.filmorate.exception.NotFoundedException;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -30,7 +29,7 @@ public class User {
     @PastOrPresent
     private LocalDate birthday; //Дата рождения (Или сегодня, или в прошедшем времени)
 
-    Set<Integer> friends = new HashSet<>();
+    private Set<Integer> friends = new HashSet<>();
 
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
@@ -47,7 +46,7 @@ public class User {
         if (idFriend > 0) {
             friends.add(idFriend);
         } else {
-            throw new NotFoundedException("Для добавления в друзья,должен быть положительный ID");
+            throw new EntityNotFoundException("Для добавления в друзья,должен быть положительный ID");
         }
     }
 
@@ -55,7 +54,7 @@ public class User {
         if (idFriend > 0) {
             friends.remove(idFriend);
         } else {
-            throw new NotFoundedException("Для удаления из друзей,должен быть положительный ID");
+            throw new EntityNotFoundException("Для удаления из друзей,должен быть положительный ID");
         }
     }
 

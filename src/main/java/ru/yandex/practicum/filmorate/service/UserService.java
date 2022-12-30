@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.NotFoundedException;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
@@ -14,7 +14,7 @@ import java.util.Map;
 @Service
 @Slf4j
 public class UserService {
-    InMemoryUserStorage inMemoryUserStorage;
+    private final InMemoryUserStorage inMemoryUserStorage;
 
     @Autowired
     public UserService(InMemoryUserStorage inMemoryUserStorage) {
@@ -26,7 +26,7 @@ public class UserService {
     }
 
     public User getUserById(Integer id) {
-        existsUser(id);
+        CheckExistsUser(id);
         return inMemoryUserStorage.getById(id);
     }
 
@@ -46,7 +46,7 @@ public class UserService {
 
     public User updateUser(User user) {
         log.info("UserService.updateUser: Обновляем пользователя");
-        existsUser(user);
+        CheckExistsUser(user);
         if (user.getName() == null || user.getName().isEmpty() || user.getName().isBlank()) {
             log.info("UserController.updateUser: Устанавливаем Имя пользователю(его логин)");
             user.setName(user.getLogin());
@@ -55,13 +55,13 @@ public class UserService {
     }
 
     public void addFriend(Integer idUser, Integer idFriend) {
-        existsUser(idUser, idFriend);
+        CheckExistsUser(idUser, idFriend);
         inMemoryUserStorage.getAll().get(idUser).addFriend(idFriend);
         inMemoryUserStorage.getAll().get(idFriend).addFriend(idUser);
     }
 
     public void deleteFriend(Integer idUser, Integer idFriend) {
-        existsUser(idUser, idFriend);
+        CheckExistsUser(idUser, idFriend);
         inMemoryUserStorage.getAll().get(idUser).deleteFriend(idFriend);
         inMemoryUserStorage.getAll().get(idFriend).deleteFriend(idUser);
     }
@@ -70,7 +70,7 @@ public class UserService {
      * Выводим друзей Пользователя
      */
     public List<User> getUserFriends(Integer idUser) {
-        existsUser(idUser);
+        CheckExistsUser(idUser);
         List<User> friends = new ArrayList<>();
         for (Integer friendId : inMemoryUserStorage.getAll().get(idUser).getFriends()) {
             if (inMemoryUserStorage.getAll().containsKey(friendId)) {
@@ -84,7 +84,7 @@ public class UserService {
      * Выводим общих друзей
      */
     public List<User> getCommonFriend(Integer idUser, Integer idFriend) {
-        existsUser(idUser, idFriend);
+        CheckExistsUser(idUser, idFriend);
         List<User> commonFriend = new ArrayList<>();
         for (Integer idFriendUser : inMemoryUserStorage.getAll().get(idUser).getFriends()) {
             if (inMemoryUserStorage.getAll().get(idFriend).getFriends().contains(idFriendUser)) {
@@ -94,21 +94,21 @@ public class UserService {
         return commonFriend;
     }
 
-    private void existsUser(Integer id) {
+    private void CheckExistsUser(Integer id) {
         if (!getUsers().containsKey(id)) {
-            throw new NotFoundedException("Нет пользователя с таким ID.");
+            throw new EntityNotFoundException("Нет пользователя с таким ID.");
         }
     }
 
-    private void existsUser(User user) {
+    private void CheckExistsUser(User user) {
         if (!getUsers().containsKey(user.getId())) {
-            throw new NotFoundedException("Нет пользователя с таким ID.");
+            throw new EntityNotFoundException("Нет пользователя с таким ID.");
         }
     }
 
-    private void existsUser(Integer id, Integer otherId) {
+    private void CheckExistsUser(Integer id, Integer otherId) {
         if (!getUsers().containsKey(id) || !getUsers().containsKey(otherId)) {
-            throw new NotFoundedException("Нет пользователя с таким ID.");
+            throw new EntityNotFoundException("Нет пользователя с таким ID.");
         }
     }
 }

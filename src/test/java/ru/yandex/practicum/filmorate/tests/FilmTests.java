@@ -33,16 +33,18 @@ public class FilmTests {
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         Assertions.assertFalse(violations.isEmpty(), "Пустое имя");
     }
+
     @Test
     @DisplayName("Проверка максимального количества элементов (201 элемент)")
     void correctlyDescriptionFilmTest() {
         final Film film = new Film("",
                 "11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" +
-                "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                        "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 LocalDate.of(2000, 11, 14), 160, 1);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         Assertions.assertFalse(violations.isEmpty(), "Количество элементов больше 200");
     }
+
     @Test
     @DisplayName("Проверка продолжительности")
     void correctlyDurationFilmTest() {
@@ -50,10 +52,4 @@ public class FilmTests {
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         Assertions.assertFalse(violations.isEmpty(), "Отрицательная продолжительность");
     }
-//    @Test
-//    @DisplayName("Проверка даты")
-//    void correctlyDateFilmTest() {
-//        final Film film = new Film("testName", "testDescription", LocalDate.of(1985, 12, 27), 100, 1);
-//        Assertions.assertFalse(ValidationFilm.isValidDate(film.getReleaseDate()), "Не корректная дата");
-//    }
 }

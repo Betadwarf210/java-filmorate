@@ -10,7 +10,6 @@ import java.util.Map;
  */
 
 
-@Component
 public interface FilmStorage {
 
     Map<Integer, Film> getAll();

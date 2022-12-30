@@ -46,12 +46,4 @@ public class UserTests {
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         Assertions.assertFalse(violations.isEmpty(),"Не верная дата(будующий сегмент)");
     }
-//    @Test
-//    @DisplayName("Проверка валидации. Передаем пустой логин")
-//    void correctlyLoginUserTest() {
-//        final User user = new User("mr@gmail.ru", "", "testName", LocalDate.of(2000, 11, 14));
-//        Set<ConstraintViolation<User>> violations = validator.validate(user);
-//        Assertions.assertFalse(violations.isEmpty(),"Пустой логин");
-//    }
-
 }

@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.NotFoundedException;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
-    InMemoryFilmStorage inMemoryFilmStorage;
+    private InMemoryFilmStorage inMemoryFilmStorage;
 
     @Autowired
     public FilmService(InMemoryFilmStorage inMemoryFilmStorage) {
@@ -25,7 +25,7 @@ public class FilmService {
     }
 
     public Film getFilmById(Integer id) {
-        existsFilm(id);
+        checkExistsFilm(id);
         return inMemoryFilmStorage.getById(id);
     }
 
@@ -38,7 +38,7 @@ public class FilmService {
     }
 
     public void updateFilm(Film film) {
-        existsFilm(film);
+        checkExistsFilm(film);
         inMemoryFilmStorage.update(film);
     }
 
@@ -46,7 +46,7 @@ public class FilmService {
      * Добавление лайка на фильм
      */
     public void addLikeFilm(Integer filmId, Integer userId) {
-        existsFilm(filmId);
+        checkExistsFilm(filmId);
         if (!inMemoryFilmStorage.getAll().get(filmId).getUsersLikedFilm().contains(userId)) {
             inMemoryFilmStorage.getAll().get(filmId).addLike(userId);
         }
@@ -56,7 +56,7 @@ public class FilmService {
      * Удаление лайка на фильм
      */
     public void deleteLikeFilm(Integer filmId, Integer userId) {
-        existsFilmOrUser(filmId, userId);
+        checkExistsFilmOrUser(filmId, userId);
         inMemoryFilmStorage.getAll().get(filmId).deleteLike(userId);
     }
 
@@ -76,27 +76,27 @@ public class FilmService {
                 .collect(Collectors.toList());
     }
 
-    private Boolean existsFilm(Film film) {
+    private Boolean checkExistsFilm(Film film) {
         if (!getFilms().containsKey(film.getId())) {
-            throw new NotFoundedException("Нет фильма с таким ID.");
+            throw new EntityNotFoundException("Нет фильма с таким ID.");
         } else {
             return true;
         }
     }
 
-    private Boolean existsFilm(Integer filmId) {
+    private Boolean checkExistsFilm(Integer filmId) {
         if (!getFilms().containsKey(filmId)) {
-            throw new NotFoundedException("Нет фильма с таким ID.");
+            throw new EntityNotFoundException("Нет фильма с таким ID.");
         } else {
             return true;
         }
     }
 
-    private Boolean existsFilmOrUser(Integer id, Integer userId) {
+    private Boolean checkExistsFilmOrUser(Integer id, Integer userId) {
         if (userId < 1) {
-            throw new NotFoundedException("Id пользователя должно быть больше 1.");
+            throw new EntityNotFoundException("Id пользователя должно быть больше 1.");
         } else if (!getFilms().containsKey(id)) {
-            throw new NotFoundedException("Нет фильма с таким ID.");
+            throw new EntityNotFoundException("Нет фильма с таким ID.");
         } else {
             return true;
         }
