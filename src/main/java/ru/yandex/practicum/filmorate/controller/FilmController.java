@@ -17,17 +17,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Betadwarf-210
- */
-
 @RestController
 @RequestMapping("/films")
 public class FilmController {
 
     private final Logger log = LoggerFactory.getLogger(FilmController.class);//Лог действий
-    private final Map<Integer, Film> films = new HashMap<>();
-    Integer filmId = 0; // ID фильма
 
     final FilmService filmService;
 
