@@ -4,8 +4,8 @@ package ru.yandex.practicum.filmorate.handler;
  * Betadwarf-210
  */
 public class ErrorResponse {
-    String error;
-    String description;
+    private String error;
+    private String description;
 
     public ErrorResponse(String error, String description) {
         this.error = error;

@@ -26,7 +26,7 @@ public class UserService {
     }
 
     public User getUserById(Integer id) {
-        ExistsUser(id);
+        CheckExistsUser(id);
         return inMemoryUserStorage.getById(id);
     }
 
@@ -46,7 +46,7 @@ public class UserService {
 
     public User updateUser(User user) {
         log.info("UserService.updateUser: Обновляем пользователя");
-        ExistsUser(user);
+        CheckExistsUser(user);
         if (user.getName() == null || user.getName().isEmpty() || user.getName().isBlank()) {
             log.info("UserController.updateUser: Устанавливаем Имя пользователю(его логин)");
             user.setName(user.getLogin());
@@ -55,13 +55,13 @@ public class UserService {
     }
 
     public void addFriend(Integer idUser, Integer idFriend) {
-        ExistsUser(idUser, idFriend);
+        CheckExistsUser(idUser, idFriend);
         inMemoryUserStorage.getAll().get(idUser).addFriend(idFriend);
         inMemoryUserStorage.getAll().get(idFriend).addFriend(idUser);
     }
 
     public void deleteFriend(Integer idUser, Integer idFriend) {
-        ExistsUser(idUser, idFriend);
+        CheckExistsUser(idUser, idFriend);
         inMemoryUserStorage.getAll().get(idUser).deleteFriend(idFriend);
         inMemoryUserStorage.getAll().get(idFriend).deleteFriend(idUser);
     }
@@ -70,7 +70,7 @@ public class UserService {
      * Выводим друзей Пользователя
      */
     public List<User> getUserFriends(Integer idUser) {
-        ExistsUser(idUser);
+        CheckExistsUser(idUser);
         List<User> friends = new ArrayList<>();
         for (Integer friendId : inMemoryUserStorage.getAll().get(idUser).getFriends()) {
             if (inMemoryUserStorage.getAll().containsKey(friendId)) {
@@ -84,7 +84,7 @@ public class UserService {
      * Выводим общих друзей
      */
     public List<User> getCommonFriend(Integer idUser, Integer idFriend) {
-        ExistsUser(idUser, idFriend);
+        CheckExistsUser(idUser, idFriend);
         List<User> commonFriend = new ArrayList<>();
         for (Integer idFriendUser : inMemoryUserStorage.getAll().get(idUser).getFriends()) {
             if (inMemoryUserStorage.getAll().get(idFriend).getFriends().contains(idFriendUser)) {
@@ -94,19 +94,19 @@ public class UserService {
         return commonFriend;
     }
 
-    private void ExistsUser(Integer id) {
+    private void CheckExistsUser(Integer id) {
         if (!getUsers().containsKey(id)) {
             throw new EntityNotFoundException("Нет пользователя с таким ID.");
         }
     }
 
-    private void ExistsUser(User user) {
+    private void CheckExistsUser(User user) {
         if (!getUsers().containsKey(user.getId())) {
             throw new EntityNotFoundException("Нет пользователя с таким ID.");
         }
     }
 
-    private void ExistsUser(Integer id, Integer otherId) {
+    private void CheckExistsUser(Integer id, Integer otherId) {
         if (!getUsers().containsKey(id) || !getUsers().containsKey(otherId)) {
             throw new EntityNotFoundException("Нет пользователя с таким ID.");
         }

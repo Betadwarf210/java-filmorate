@@ -22,8 +22,6 @@ import java.util.Map;
 public class FilmController {
 
     private final Logger log = LoggerFactory.getLogger(FilmController.class);//Лог действий
-    private final Map<Integer, Film> films = new HashMap<>();
-    Integer filmId = 0; // ID фильма
 
     final FilmService filmService;
 
